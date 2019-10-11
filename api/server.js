@@ -16,15 +16,12 @@ app.get('/user/:userID', (req, res) => {
     res.status(200).json({status: 'ok'})
 });
 
-mongoose.connect('mongodb://localhost:27015/userdb', {
-    useNewUrlParser: true, useUnifiedTopology: true
-})
-    .then((res, err) => {
-        if (err) return console.error(err);
-        console.info('Connected with userdb');
+connectMongoDB()
+    .then(() => connectConsumer())
+    .then(() => {
         app.listen(3002, () => {
             // addedNUsers(20);
-            connectConsumer();
+            console.info('Connected with userdb');
             console.info('kn-ms-user is running on port 3002');
         })
     });

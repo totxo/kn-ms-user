@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const casual = require('casual');
 const User = require('../models/user.model');
 
