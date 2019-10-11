@@ -7,5 +7,12 @@ module.exports = {
                 .then((userDB) => resolve(userDB))
                 .catch((err) => reject(err))
         })
+    },
+    updateCounterUser: (username) => {
+        return new Promise((resolve, reject) => {
+            userRepository.updateCounterUser(username)
+                .then(() => resolve())
+                .catch((err) => reject(err))
+        })
     }
 };

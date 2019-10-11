@@ -8,5 +8,13 @@ module.exports = {
               resolve(userDB);
           })
       })
-  }
+  },
+    updateCounterUser: (username) => {
+      return new Promise((resolve, reject) => {
+          User.updateOne({username: username}, {$inc: {counterOfEditedBooks: 1}}, (err) => {
+              if (err) return reject(err);
+              resolve();
+          })
+      })
+    }
 };
