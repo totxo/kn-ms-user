@@ -2,19 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const {connectMongoDB, addedNUsers} = require('./db/mongo.db');
 const {connectConsumer} = require('./kafka/kafka.connect');
-const app = express();
+const userEndpoint = require('./endpoints/user.endpoint');
 
-app.get('/user/:userID', (req, res) => {
-    /*
-    * SHOW
-    * {
-    *   _id: user._id,
-    *    user: user.name,
-    *    countCreatedBooks: user.countCreatedBooks
-    * }
-    */
-    res.status(200).json({status: 'ok'})
-});
+const app = express();
+userEndpoint(app);
 
 connectMongoDB()
     .then(() => connectConsumer())
