@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { Kafka } = require('kafkajs')
+const { Kafka } = require('kafkajs');
+const {addedNUsers} = require('./db/mongo.db');
 
 const kafka = new Kafka({
     clientId: 'kn-ms-user',
@@ -31,6 +32,7 @@ mongoose.connect('mongodb://localhost:27015/userdb', {
         if (err) return console.error(err);
         console.info('Connected with userdb');
         app.listen( 3002, async () => {
+            // addedNUsers(20);
             await consumer.connect();
             await consumer.subscribe({topic});
             await consumer.run({
