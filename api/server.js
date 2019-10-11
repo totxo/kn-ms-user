@@ -1,16 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { Kafka } = require('kafkajs');
-const {addedNUsers} = require('./db/mongo.db');
-
-const kafka = new Kafka({
-    clientId: 'kn-ms-user',
-    brokers: ['localhost:9092']
-});
-
-const topic = 'issue-creation-of-a-book';
-const consumer = kafka.consumer({ groupId: 'test-group' });
-
+const {connectMongoDB, addedNUsers} = require('./db/mongo.db');
+const {connectConsumer} = require('./kafka/kafka.connect');
 const app = express();
 
 app.get('/user/:userID', (req, res) => {
@@ -31,19 +22,9 @@ mongoose.connect('mongodb://localhost:27015/userdb', {
     .then((res, err) => {
         if (err) return console.error(err);
         console.info('Connected with userdb');
-        app.listen( 3002, async () => {
+        app.listen(3002, () => {
             // addedNUsers(20);
-            await consumer.connect();
-            await consumer.subscribe({topic});
-            await consumer.run({
-                // eachBatch: async ({ batch }) => {
-                //   console.log(batch)
-                // },
-                eachMessage: async ({ topic, partition, message }) => {
-                    const prefix = `${topic}[${partition} | ${message.offset}] / ${message.timestamp}`
-                    console.log(`- ${prefix} ${message.key}#${message.value}`)
-                },
-            });
+            connectConsumer();
             console.info('kn-ms-user is running on port 3002');
         })
     });
